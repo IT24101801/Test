@@ -8,12 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-var connectionString =
-    $"Host={Environment.GetEnvironmentVariable("DB_HOST")};" +
-    $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
-    $"Database={Environment.GetEnvironmentVariable("DB_NAME")};" +
-    $"Username={Environment.GetEnvironmentVariable("DB_USER")};" +
-    $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")}";
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new Exception("DATABASE_URL is not set.");
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
